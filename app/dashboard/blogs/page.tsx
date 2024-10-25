@@ -1,13 +1,5 @@
-import BgGradient from "@/components/common/bg-gradient";
 import { Badge } from "@/components/ui/badge";
-import UpgradeYourPlan from "@/components/upload/upgrade-your-plan";
 import UploadForm from "@/components/upload/upload-form";
-import prisma from "@/lib/prisma";
-import {
-  doesUserExist,
-  getPlanType,
-  updateUser,
-} from "@/lib/user-helpers";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -18,69 +10,43 @@ export default async function Dashboard() {
     return redirect("/sign-in");
   }
 
-  const email = clerkUser?.emailAddresses?.[0].emailAddress ?? "";
-
-  const userId = clerkUser?.id;
-  let priceId = null;
-
-  const user = await doesUserExist(email);
-
-  if (user) {
-    if (userId) {
-      await updateUser(userId, email);
-    }
-
-    priceId = user.price_id;
-  }
-
-  const { id: planTypeId = "starter", name: planTypeName } = getPlanType(priceId);
-
-  const isBasicPlan = planTypeId === "basic";
-  const isProPlan = planTypeId === "pro";
-
-  // check number of posts per plan
-  const posts = await prisma.post.findMany({
-    where: { userId: userId },
-  });
-
-  const isValidBasicPlan = isBasicPlan && posts.length < 3;
+  // Hardcoded values for demonstration
+  const planTypeName = "Pro";
+  const isProPlan = true;
 
   return (
-    <BgGradient>
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-        <div className="flex flex-col items-center justify-center gap-6 text-center">
-          <Badge className="bg-gradient-to-r from-purple-700 to-pink-800 text-white px-4 py-1 text-lg font-semibold capitalize">
-            {planTypeName} Plan
-          </Badge>
+    <div className="bg-black mx-auto px-6 lg:px-8 py-24 sm:py-32 max-w-7xl min-h-screen">
+      <div className="flex flex-col justify-center items-center gap-8 text-center">
+        <Badge className="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 shadow-lg hover:shadow-xl px-6 py-2 rounded-full font-bold text-white text-xl capitalize transform transition-all duration-300 hover:scale-105">
+          {planTypeName} Plan
+        </Badge>
 
-          <h2 className="capitalize text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Start creating amazing content
-          </h2>
+        <h2 className="bg-clip-text bg-gradient-to-r from-blue-400 via-teal-300 to-green-400 font-extrabold text-4xl text-transparent sm:text-5xl md:text-6xl capitalize leading-tight tracking-tight">
+          Start creating amazing content
+        </h2>
 
-          <p className="mt-2 text-lg leading-8 text-gray-600 max-w-2xl text-center">
-            Upload your audio or video file and let our AI do the magic!
+        <p className="bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 mt-4 max-w-2xl font-extrabold text-4xl text-center text-transparent sm:text-5xl leading-8">
+          Upload your audio or video file and let our AI do the magic!
+        </p>
+
+        {isProPlan && (
+          <p className="mt-4 max-w-2xl text-center text-gray-300 text-lg sm:text-xl leading-8">
+            You get{" "}
+            <span className="inline-block bg-gradient-to-r from-blue-600 to-purple-800 px-4 py-2 rounded-full font-extrabold text-white transform hover:scale-110 transition-transform duration-200">
+              Unlimited blog posts
+            </span>{" "}
+            as part of the{" "}
+            <span className="bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 font-extrabold text-2xl text-transparent capitalize">
+              {planTypeName}
+            </span>{" "}
+            Plan.
           </p>
+        )}
 
-          {(isBasicPlan || isProPlan) && (
-            <p className="mt-2 text-lg leading-8 text-gray-600 max-w-2xl text-center">
-              You get{" "}
-              <span className="font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded-md">
-                {isBasicPlan ? "3" : "Unlimited"} blog posts
-              </span>{" "}
-              as part of the{" "}
-              <span className="font-bold capitalize">{planTypeName}</span> Plan.
-            </p>
-          )}
-
-          {isValidBasicPlan || isProPlan ? (
-            <BgGradient>
-              <UploadForm />
-            </BgGradient>
-          ) : (
-            <UpgradeYourPlan />
-          )}
+        <div className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 shadow-2xl hover:shadow-3xl mt-8 p-8 rounded-3xl w-full max-w-4xl transition-all duration-300">
+          <UploadForm />
         </div>
       </div>
-    </BgGradient>
+    </div>
   );
 }

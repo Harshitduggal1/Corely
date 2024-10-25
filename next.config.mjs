@@ -4,7 +4,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // This line ignores TypeScript errors during build
   },
   env: {
     DATABASE_URL: process.env.DATABASE_URL,

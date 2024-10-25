@@ -78,10 +78,7 @@ export default function UploadForm() {
           "Hang tight! Our digital wizards are sprinkling magic dust on your file! ✨",
       });
 
-      // Get the user ID from somewhere (e.g., session, context, etc.)
-      const userId = "user-id"; // Replace this with actual user ID
-
-      const result = await transcribeUploadedFile(resp[0]);
+      const result = await transcribeUploadedFile(resp);
       const { data = null, message = null } = result || {};
 
       if (!result || (!data && !message)) {
@@ -101,7 +98,7 @@ export default function UploadForm() {
 
         await generateBlogPostAction({
           transcriptions: data.transcriptions,
-          userId: userId, // Use the user ID here
+          userId: data.userId, // Use the userId from the data object
         });
 
         toast({
@@ -112,6 +109,7 @@ export default function UploadForm() {
       }
     }
   };
+
   return (
     <form className="flex flex-col gap-6" action={handleTranscribe}>
       <div className="flex justify-end items-center gap-1.5">

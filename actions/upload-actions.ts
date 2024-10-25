@@ -3,18 +3,15 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import OpenAI from "openai";
-
+// get openAI API key fisrt 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function transcribeUploadedFile(
   resp: {
-    name: string;
-    size: number;
-    key: string;
-    url: string;
-  }
+    serverData: { userId: string; file: { url: string; name: string } };
+  }[]
 ) {
   if (!resp) {
     return {
@@ -24,7 +21,12 @@ export async function transcribeUploadedFile(
     };
   }
 
-  const { url: fileUrl, name: fileName } = resp;
+  const {
+    serverData: {
+      userId,
+      file: { url: fileUrl, name: fileName },
+    },
+  } = resp[0];
 
   if (!fileUrl || !fileName) {
     return {
@@ -46,7 +48,7 @@ export async function transcribeUploadedFile(
     return {
       success: true,
       message: "File uploaded successfully!",
-      data: { transcriptions, userId: 'user-id' }, // You'll need to pass userId separately
+      data: { transcriptions, userId },
     };
   } catch (error) {
     console.error("Error processing file", error);
@@ -69,14 +71,14 @@ export async function transcribeUploadedFile(
 
 async function saveBlogPost(userId: string, title: string, content: string) {
   try {
-    const insertedPost = await prisma.post.create({
+    const post = await prisma.post.create({
       data: {
-        userId,
         title,
         content,
+        userId,
       },
     });
-    return insertedPost.id;
+    return post.id;
   } catch (error) {
     console.error("Error saving blog post", error);
     throw error;
@@ -91,7 +93,7 @@ async function getUserBlogPosts(userId: string) {
       take: 3,
       select: { content: true },
     });
-    return posts.map((post: { content: string }) => post.content).join("\n\n");
+    return posts.map((post) => post.content).join("\n\n");
   } catch (error) {
     console.error("Error getting user blog posts", error);
     throw error;
@@ -148,6 +150,15 @@ export async function generateBlogPostAction({
   transcriptions: { text: string };
   userId: string;
 }) {
+  // Validate user existence
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return {
+      success: false,
+      message: "Invalid user ID",
+    };
+  }
+
   const userPosts = await getUserBlogPosts(userId);
 
   let postId = null;
@@ -165,13 +176,17 @@ export async function generateBlogPostAction({
       };
     }
 
-    const [title] = blogPost?.split("\n\n") || [];
+    const [title, ...contentParts] = blogPost?.split("\n\n") || [];
+    
+    // Use contentParts to render the blog post content
+    const renderedContent = contentParts.join("\n\n");
 
     if (blogPost) {
-      postId = await saveBlogPost(userId, title, blogPost);
+      postId = await saveBlogPost(userId, title, renderedContent);
     }
   }
 
+  // Navigate
   revalidatePath(`/posts/${postId}`);
   redirect(`/posts/${postId}`);
 }

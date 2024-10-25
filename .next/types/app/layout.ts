@@ -1,4 +1,4 @@
-// File: /Users/harshitduggal/Library/CloudStorage/iCloudDrive-iCloudDrive (9-2-24 21:40)/com~apple~CloudDocs/Documents/Documents - harshit’s MacBook Air - 1/Corely/app/layout.tsx
+// File: /Users/harshitduggal/Library/CloudStorage/iCloudDrive-iCloudDrive (9-2-24 21:40)/com~apple~CloudDocs/Documents/Documents - harshit’s MacBook Air - 1/Corely-1/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
