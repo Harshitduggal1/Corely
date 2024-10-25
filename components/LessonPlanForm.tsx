@@ -387,34 +387,43 @@ const LessonPlanForm = ({ isSubscribed }: { isSubscribed: boolean }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Create a JSON object from form data
-    const dataToSubmit = {
-      ...formData,
-      topic: isSubscribed && customTopic ? customTopic : formData.topic,
-      subtopic: isSubscribed && customSubtopic ? customSubtopic : formData.subtopic,
-    };
+    const formDataToSubmit = new FormData();
 
-    console.log("Form Data: ", dataToSubmit);
+    Object.entries(formData).forEach(([key, value]) => {
+      formDataToSubmit.append(key, value);
+    });
 
+    if (isSubscribed) {
+      if (customTopic) formDataToSubmit.set("topic", customTopic);
+      if (customSubtopic) formDataToSubmit.set("subtopic", customSubtopic);
+    }
+
+    console.log("Form Data: ", Object.fromEntries(formDataToSubmit));
     try {
-      // Call the CreateLessonPlan function with JSON data
-      const response = await CreateLessonPlan(dataToSubmit);
-
-      // Handle the response
+      const lessonPlanInput = {
+        topic: formDataToSubmit.get('topic') as string,
+        subtopic: formDataToSubmit.get('subtopic') as string,
+        duration: formDataToSubmit.get('duration') as string,
+        studentLevel: formDataToSubmit.get('studentLevel') as string,
+        objective: formDataToSubmit.get('objective') as string,
+      };
+      const response = await CreateLessonPlan(lessonPlanInput);
       if (response.success) {
-        router.push("/dashboard/course");
+        router.push("/dashboard");
       } else {
         toast({
           title: "Something went wrong.",
-          description: response.error || "An error occurred. Please try again later.",
+          description:
+            "An error occurred. This shouldn't happen. Try again later.",
           variant: "destructive",
         });
       }
+      // make logic to submit form on backend
     } catch (error) {
-      console.error("Error during lesson plan creation:", error);
       toast({
         title: "Something went wrong.",
-        description: "An error occurred. Please try again later.",
+        description:
+          "An error occurred. This shouldn't happen. Try again later.",
         variant: "destructive",
       });
     } finally {

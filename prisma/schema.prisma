@@ -17,6 +17,7 @@ model User {
     updatedAt          DateTime     @updatedAt
     lessonPlans        LessonPlan[]
     stripe_customer_id String?
+    posts              Post[]       // New relation to Post model
 }
 
 model LessonPlan {
@@ -41,4 +42,15 @@ model Section {
     lessonPlanId String
     lessonPlan   LessonPlan @relation(fields: [lessonPlanId], references: [id])
     duration     Int
+}
+
+// New Post model for blog functionality
+model Post {
+    id        String   @id @default(cuid())
+    title     String
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
 }
