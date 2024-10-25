@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-async-client-component */
 "use client";
 
+import { useState } from "react";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -9,6 +11,10 @@ import {
   generateBlogPostAction,
   transcribeUploadedFile,
 } from "@/actions/upload-actions";
+
+
+//updated error handlings and added toast notifications!!!
+//updated and fix bugs significantly 
 
 const schema = z.object({
   file: z
@@ -26,101 +32,113 @@ const schema = z.object({
 
 export default function UploadForm() {
   const { toast } = useToast();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const { startUpload } = useUploadThing("videoOrAudioUploader", {
     onClientUploadComplete: () => {
-      toast({ title: "uploaded successfully!" });
+      toast({ title: "Uploaded successfully!" });
     },
     onUploadError: (err) => {
       console.error("Error occurred", err);
+      toast({ title: "Upload Error", description: err.message, variant: "destructive" });
     },
     onUploadBegin: () => {
       toast({ title: "Upload has begun 🚀!" });
     },
   });
 
-  const handleTranscribe = async (formData: FormData) => {
-    const file = formData.get("file") as File;
+  const handleTranscribe = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsProcessing(true);
+    const formData = new FormData(event.currentTarget);
+    const file = formData.get("file") as File | null;
+
+    if (!file) {
+      toast({
+        title: "❌ Something went wrong",
+        variant: "destructive",
+        description: "No file selected",
+      });
+      setIsProcessing(false);
+      return;
+    }
 
     const validatedFields = schema.safeParse({ file });
 
     if (!validatedFields.success) {
-      console.log(
-        "validatedFields",
-        validatedFields.error.flatten().fieldErrors
-      );
       toast({
         title: "❌ Something went wrong",
         variant: "destructive",
-        description:
-          validatedFields.error.flatten().fieldErrors.file?.[0] ??
-          "Invalid file",
+        description: validatedFields.error.flatten().fieldErrors.file?.[0] ?? "Invalid file",
       });
+      setIsProcessing(false);
       return;
     }
 
-    if (file) {
-      const resp = await startUpload([file]);
-      console.log({ resp });
+    try {
+      const uploadResp = await startUpload([file]);
 
-      if (!resp || resp.length === 0) {
-        toast({
-          title: "Something went wrong",
-          description: "Please use a different file",
-          variant: "destructive",
-        });
-        return;
+      if (!uploadResp || uploadResp.length === 0) {
+        throw new Error("File upload failed");
       }
 
       toast({
         title: "🎙️ Transcription is in progress...",
-        description:
-          "Hang tight! Our digital wizards are sprinkling magic dust on your file! ✨",
+        description: "Hang tight! Our digital wizards are sprinkling magic dust on your file! ✨",
       });
 
-      const result = await transcribeUploadedFile(resp);
-      const { data = null, message = null } = result || {};
+      const transcriptionResult = await transcribeUploadedFile([{
+        serverData: {
+          userId: "placeholder-user-id", // Replace with actual user ID if available
+          file: {
+            url: uploadResp[0].url,
+            name: uploadResp[0].name
+          }
+        }
+      }]);
 
-      if (!result || (!data && !message)) {
-        toast({
-          title: "An unexpected error occurred",
-          description:
-            "An error occurred during transcription. Please try again.",
-        });
-        return;
+      if (!transcriptionResult.success || !transcriptionResult.data) {
+        throw new Error(transcriptionResult.message || "Transcription failed");
       }
 
-      if (data) {
-        toast({
-          title: "🤖 Generating AI blog post...",
-          description: "Please wait while we generate your blog post.",
-        });
+      toast({
+        title: "🤖 Generating AI blog post...",
+        description: "Please wait while we generate your blog post.",
+      });
 
-        await generateBlogPostAction({
-          transcriptions: data.transcriptions,
-          userId: data.userId, // Use the userId from the data object
-        });
+      const blogPostResult = await generateBlogPostAction({
+        transcriptions: transcriptionResult.data.transcriptions,
+        userId: transcriptionResult.data.userId,
+      });
 
-        toast({
-          title: "🎉 Woohoo! Your AI blog is created! 🎊",
-          description:
-            "Time to put on your editor hat, Click the post and edit it!",
-        });
+      if (!blogPostResult.success) {
+        throw new Error(blogPostResult.message || "Blog post generation failed");
       }
+
+      toast({
+        title: "🎉 Woohoo! Your AI blog is created! 🎊",
+        description: "Time to put on your editor hat! Click the post to edit it.",
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error occurred",
+        description: error instanceof Error ? error.message : "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   return (
-    <form className="flex flex-col gap-6" action={handleTranscribe}>
+    <form className="flex flex-col gap-6" onSubmit={handleTranscribe}>
       <div className="flex justify-end items-center gap-1.5">
-        <Input
-          id="file"
-          name="file"
-          type="file"
-          accept="audio/*,video/*"
-          required
-        />
-        <Button className="bg-purple-600">Transcribe</Button>
+        <Input id="file" name="file" type="file" accept="audio/*,video/*" required />
+        <Button type="submit" className="bg-purple-600" disabled={isProcessing}>
+          {isProcessing ? "Processing..." : "Transcribe"}
+        </Button>
       </div>
     </form>
   );

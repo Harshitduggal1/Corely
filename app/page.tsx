@@ -24,7 +24,7 @@ export default function Home() {
   const { userId } = auth();
 
   return (
-    <div className="bg-gradient-to-b from-blue-900/40 via-purple-950/80 to-sky-700 pt-20 min-h-screen text-gray-100 overflow-hidden">
+    <div className="bg-gradient-to-r from-black via-purple-950/30 to-sky-900/40 pt-20 min-h-screen text-gray-100 overflow-hidden">
       <Navbar />
 
       <main className="relative mx-auto px-4 sm:px-6 lg:px-8 container">

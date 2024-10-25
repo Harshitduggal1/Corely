@@ -2,13 +2,33 @@
   "node": {
     "5f234c513dfc052383b18fe16706810c6bea844d": {
       "workers": {
-        "app/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!",
+        "app/dashboard/generate/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!",
+        "app/dashboard/blogs/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Factions%2Fupload-actions.ts%22%2C%5B%22transcribeUploadedFile%22%2C%22generateBlogPostAction%22%5D%5D%2C%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/dashboard/generate/page": "action-browser",
+        "app/dashboard/blogs/page": "action-browser"
+      }
+    },
+    "29be2c919d60a82fe751ede1c2b2d7c22ba067fa": {
+      "workers": {
+        "app/dashboard/blogs/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Factions%2Fupload-actions.ts%22%2C%5B%22transcribeUploadedFile%22%2C%22generateBlogPostAction%22%5D%5D%2C%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/dashboard/blogs/page": "action-browser"
+      }
+    },
+    "be5a1dfe8fe9758435b657415c49783d356766c8": {
+      "workers": {
+        "app/dashboard/blogs/page": "(action-browser)/../../../../../../../node_modules/.pnpm/next@15.0.0-rc.0_@babel+core@7.24.4_@opentelemetry+api@1.9.0_react-dom@19.0.0-rc-d5bba18b-202_oliw3phgrggs3shcirdtxjs5wq/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Factions%2Fupload-actions.ts%22%2C%5B%22transcribeUploadedFile%22%2C%22generateBlogPostAction%22%5D%5D%2C%5B%22%2FUsers%2Fharshitduggal%2FLibrary%2FCloudStorage%2FiCloudDrive-iCloudDrive%20(9-2-24%2021%3A40)%2Fcom~apple~CloudDocs%2FDocuments%2FDocuments%20-%20harshit%E2%80%99s%20MacBook%20Air%20-%201%2FCorely-1%2Fnode_modules%2F%40clerk%2Fnextjs%2Fdist%2Fesm%2Fapp-router%2Fserver-actions.js%22%2C%5B%22invalidateCacheAction%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/dashboard/blogs/page": "action-browser"
       }
     }
   },
   "edge": {},
-  "encryptionKey": "aP3X2swOPVkCG8Bc4t3ycWqpIP8YrsjmSkbfnkcXj2I="
+  "encryptionKey": "r6jubFbaGd/jZeRwg7mdTWXdlb8R8Sz+Iwmq+Ky/2D0="
 }

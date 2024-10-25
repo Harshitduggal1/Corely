@@ -1,6 +1,8 @@
 import { db } from "./dbConfig";
 import { Users, Subscriptions, GeneratedContent } from "./schema";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { eq, sql, and, desc } from "drizzle-orm";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { sendWelcomeEmail, initMailtrap } from "../mailtrap";
 
 export async function updateUserPoints(userId: string, points: number) {

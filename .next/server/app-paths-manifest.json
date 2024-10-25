@@ -1,3 +1,6 @@
 {
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/api/uploadthing/route": "app/api/uploadthing/route.js",
+  "/dashboard/blogs/page": "app/dashboard/blogs/page.js",
+  "/dashboard/generate/page": "app/dashboard/generate/page.js"
 }

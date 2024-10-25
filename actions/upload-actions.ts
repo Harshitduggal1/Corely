@@ -1,9 +1,11 @@
 "use server";
+
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import OpenAI from "openai";
-// get openAI API key fisrt 
+
+// Get OpenAI API key first
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -36,12 +38,14 @@ export async function transcribeUploadedFile(
     };
   }
 
-  const response = await fetch(fileUrl);
-
   try {
+    const response = await fetch(fileUrl);
+    const fileBlob = await response.blob();
+    const file = new File([fileBlob], fileName, { type: fileBlob.type });
+
     const transcriptions = await openai.audio.transcriptions.create({
       model: "whisper-1",
-      file: response,
+      file: file,
     });
 
     console.log({ transcriptions });
@@ -122,7 +126,7 @@ ${userPosts}
 
 Please convert the following transcription into a well-structured blog post using Markdown formatting. Follow this structure:
 
-1. Start with a SEO friendly catchy title on the first line.
+1. Start with a SEO-friendly catchy title on the first line.
 2. Add two newlines after the title.
 3. Write an engaging introduction paragraph.
 4. Create multiple sections for the main content, using appropriate headings (##, ###).
@@ -150,7 +154,6 @@ export async function generateBlogPostAction({
   transcriptions: { text: string };
   userId: string;
 }) {
-  // Validate user existence
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     return {
@@ -176,9 +179,7 @@ export async function generateBlogPostAction({
       };
     }
 
-    const [title, ...contentParts] = blogPost?.split("\n\n") || [];
-    
-    // Use contentParts to render the blog post content
+    const [title, ...contentParts] = blogPost.split("\n\n") || [];
     const renderedContent = contentParts.join("\n\n");
 
     if (blogPost) {
@@ -186,7 +187,6 @@ export async function generateBlogPostAction({
     }
   }
 
-  // Navigate
   revalidatePath(`/posts/${postId}`);
   redirect(`/posts/${postId}`);
 }
