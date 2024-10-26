@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -17,10 +18,15 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en">
         <body className={`${inter.className} bg-black text-white antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            {children}
+           
+            
+              <main className="flex-1 bg-blue-950/10 pl-64 overflow-x-hidden overflow-y-auto">
+                {children}
+              </main>
+   
           </ThemeProvider>
         </body>
       </html>

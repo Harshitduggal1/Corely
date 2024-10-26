@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className={`${inter.className} flex min-h-screen bg-black text-white`}>
-      <ModernSidebar />
+       <ModernSidebar />
       <main className="flex-1 ml-20 p-8 transition-all duration-300">
         {children}
       </main>

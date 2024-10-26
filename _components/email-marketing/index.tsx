@@ -34,8 +34,9 @@ type Props = {
     credits: number
   } | null
 }
+//pro
 
-const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
+const EmailMarketing = ({ campaign, domains }: Props) => {
   const {
     onSelectedEmails,
     isSelected,
@@ -56,8 +57,11 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
     setValue,
   } = useEmailMarketing()
 
+  // Force PRO plan
+  const forcedSubscription = { plan: 'PRO' as const, credits: 1000 }
+
   return (
-    <div className="w-full flex-1 h-0 grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div className="flex-1 gap-10 grid grid-cols-1 lg:grid-cols-2 w-full h-0">
       <CustomerTable
         domains={domains}
         onId={onSetAnswersId}
@@ -66,9 +70,8 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
         id={isId}
       />
       <div>
-        <div className="flex gap-3 justify-end">
+        <div className="flex justify-end gap-3">
           <Button
-            disabled={isSelected.length == 0}
             onClick={onAddCustomersToCampaign}
           >
             <Plus /> Add to campaign
@@ -77,7 +80,7 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
             title="Create a new campaign"
             description="Add your customers and create a marketing campaign"
             trigger={
-              <Card className="flex gap-2 items-center px-3 cursor-pointer text-sm">
+              <Card className="flex items-center gap-2 px-3 text-sm cursor-pointer">
                 <Loader loading={false}>
                   <Plus /> Create Campaign
                 </Loader>
@@ -98,7 +101,6 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
               />
               <Button
                 className="w-full"
-                disabled={loading}
                 type="submit"
               >
                 <Loader loading={loading}>Create Campaign</Loader>
@@ -107,11 +109,11 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
           </Modal>
           <Card className="p-2">
             <CardDescription className="font-bold">
-              {subscription?.credits} credits
+              {forcedSubscription.credits} credits
             </CardDescription>
           </Card>
         </div>
-        <div className="flex flex-col items-end mt-5 gap-3">
+        <div className="flex flex-col items-end gap-3 mt-5">
           {campaign &&
             campaign.map((camp, i) => (
               <Card
@@ -123,9 +125,9 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
                 onClick={() => onSelectCampaign(camp.id)}
               >
                 <Loader loading={processing}>
-                  <CardContent className="p-0 flex flex-col items-center gap-3">
-                    <div className="flex w-full justify-between items-center">
-                      <div className="flex gap-2 items-center">
+                  <CardContent className="flex flex-col items-center gap-3 p-0">
+                    <div className="flex justify-between items-center w-full">
+                      <div className="flex items-center gap-2">
                         <CalIcon />
                         <CardDescription>
                           Created {getMonthName(camp.createdAt.getMonth())}{' '}
@@ -139,14 +141,14 @@ const EmailMarketing = ({ campaign, domains, subscription }: Props) => {
                         </CardDescription>
                       </div>
                     </div>
-                    <div className="flex w-full justify-between items-center">
+                    <div className="flex justify-between items-center w-full">
                       <CardTitle className="text-xl">{camp.name}</CardTitle>
                       <div className="flex gap-3">
                         <Modal
                           title="Edit Email"
                           description="This email will be sent to campaign members"
                           trigger={
-                            <Card className="rounded-lg cursor-pointer bg-grandis py-2 px-5 font-semibold text-sm hover:bg-orange text-gray-700">
+                            <Card className="bg-grandis hover:bg-orange px-5 py-2 rounded-lg font-semibold text-gray-700 text-sm cursor-pointer">
                               Edit Email
                             </Card>
                           }

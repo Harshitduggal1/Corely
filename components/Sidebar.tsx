@@ -9,7 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ModernSidebar: React.FC = () => {
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  //imporved framer motion
 
   const menuItems = [
     { id: '/dashboard', icon: Home, label: 'Home' },
@@ -26,13 +25,11 @@ const ModernSidebar: React.FC = () => {
     { id: '/dashboard/analytics', icon: Network, label: 'Analytics' },
     { id: '/dashboard/api-key', icon: Settings, label: 'API Keys' },
     { id: '/dashboard/settings', icon: Settings, label: 'Settings' }
-
-
   ];
 
   return (
     <motion.nav
-      className="top-0 left-0 z-50 fixed bg-blue-950/20 border-r border-blue-800 w-64 h-full text-white overflow-hidden"
+      className="fixed top-0 left-0 z-50 h-full w-64 bg-blue-950/20 border-r border-blue-800 text-white overflow-y-auto"
       initial={{ x: -300, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
@@ -44,7 +41,7 @@ const ModernSidebar: React.FC = () => {
       }}
     >
       <motion.div 
-        className="space-y-2 mt-28 p-4 pb-20"
+        className="space-y-2 mt-4 p-4 pb-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}

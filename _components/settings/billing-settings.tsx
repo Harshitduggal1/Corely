@@ -18,22 +18,22 @@ const BillingSettings = async () => {
 
   console.log(planFeatures)
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+    <div className="gap-10 grid grid-cols-1 lg:grid-cols-5">
       <div className="lg:col-span-1">
         <Section
           label="Billing settings"
           message="Add payment information, upgrade and modify your plan."
         />
       </div>
-      <div className="lg:col-span-2 flex justify-start lg:justify-center ">
+      <div className="flex justify-start lg:justify-center lg:col-span-2">
         <Modal
-          title="Choose A Plan"
+          title="Choose A Plan???????"
           description="Tell us about yourself! What do you do? Let’s tailor your experience so it best suits you."
           trigger={
             plan && plan === 'STANDARD' ? (
-              <Card className="border-dashed bg-cream border-gray-400 w-full cursor-pointer h-[270px] flex justify-center items-center">
-                <CardContent className="flex gap-2 items-center">
-                  <div className="rounded-full border-2 p-1">
+              <Card className="flex justify-center items-center border-gray-400 bg-cream border-dashed w-full h-[270px] cursor-pointer">
+                <CardContent className="flex items-center gap-2">
+                  <div className="border-2 p-1 rounded-full">
                     <Plus className="text-gray-400" />
                   </div>
                   <CardDescription className="font-semibold">
@@ -55,9 +55,9 @@ const BillingSettings = async () => {
         </Modal>
       </div>
       <div className="lg:col-span-2">
-        <h3 className="text-xl font-semibold mb-2">Current Plan</h3>
-        <p className="text-sm font-semibold">{plan}</p>
-        <div className="flex gap-2 flex-col mt-2">
+        <h3 className="mb-2 font-semibold text-xl">Current Plan</h3>
+        <p className="font-semibold text-sm">{plan}</p>
+        <div className="flex flex-col gap-2 mt-2">
           {planFeatures.map((feature) => (
             <div
               key={feature}

@@ -5,6 +5,7 @@ import { EMAIL_MARKETING_HEADER } from '@/constants/menu'
 import { TableCell, TableRow } from '../ui/table'
 import { Card } from '../ui/card'
 import { cn } from '@/lib/_utils'
+
 import { SideSheet } from '../sheet'
 import Answers from './answers'
 
@@ -33,7 +34,7 @@ export const CustomerTable = ({
 }: CustomerTableProps) => {
   return (
     <DataTable headers={EMAIL_MARKETING_HEADER}>
-      {domains.map((domain) =>
+      {domains?.map((domain) =>
         domain.customer.map((c) => (
           <TableRow key={c.id}>
             <TableCell>
@@ -52,7 +53,7 @@ export const CustomerTable = ({
                 description="Customer answers are stored by the bot when your customers respond back to the questions asked by the bot."
                 trigger={
                   <Card
-                    className="bg-grandis py-2 px-4 cursor-pointer text-gray-700 hover:bg-orange"
+                    className="bg-grandis hover:bg-orange px-4 py-2 text-gray-700 cursor-pointer"
                     onClick={() => onId(c.id)}
                   >
                     View

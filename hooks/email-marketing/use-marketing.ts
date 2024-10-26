@@ -158,6 +158,7 @@ export const useAnswers = (id: string) => {
   >([])
   const [loading, setLoading] = useState<boolean>(false)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onGetCustomerAnswers = async () => {
     try {
       setLoading(true)
@@ -173,7 +174,7 @@ export const useAnswers = (id: string) => {
 
   useEffect(() => {
     onGetCustomerAnswers()
-  }, [])
+  }, [onGetCustomerAnswers])
 
   return { answers, loading }
 }
@@ -197,7 +198,7 @@ export const useEditEmail = (id: string) => {
 
   useEffect(() => {
     onGetTemplate(id)
-  }, [])
+  }, [id])
 
   return { loading, template }
 }
