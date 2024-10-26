@@ -336,7 +336,7 @@ emailQueue.on('error', (error) => {
 });
 
 emailQueue.on('stalled', (job) => {
-  console.warn(`⚠�� Job ${job.id} has stalled - will be retried`);
+  console.warn(`⚠ Job ${job.id} has stalled - will be retried`);
 });
 
 process.on('SIGTERM', async () => {

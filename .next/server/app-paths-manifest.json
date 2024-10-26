@@ -1,5 +1,6 @@
 {
   "/page": "app/page.js",
-  "/api/send-email/route": "app/api/send-email/route.js",
-  "/dashboard/email-marketing/page": "app/dashboard/email-marketing/page.js"
+  "/dashboard/generate/page": "app/dashboard/generate/page.js",
+  "/dashboard/ai-video/page": "app/dashboard/ai-video/page.js",
+  "/dashboard/ai-video/create-new/page": "app/dashboard/ai-video/create-new/page.js"
 }

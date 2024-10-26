@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-import { Home, Terminal, Settings, Brain, Code, Database, Shield, Sparkle, Network } from 'lucide-react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Home, Bot, Settings, Brain, Code, Database, ShieldCheck, Zap, Network, Workflow, BookOpen, Newspaper, LineChart, Key, Cog } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,27 +10,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ModernSidebar: React.FC = () => {
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const menuItems = [
     { id: '/dashboard', icon: Home, label: 'Home' },
-    { id: '/dashboard/generate', icon: Terminal, label: 'Generate' },
+    { id: '/dashboard/generate', icon: Bot, label: 'Generate' },
     { id: '/dashboard/create', icon: Brain, label: 'AI' },
     { id: '/dashboard/appointment', icon: Code, label: 'Appointments' },
     { id: '/dashboard/email-marketing', icon: Database, label: 'Email Marketing' },
-    { id: '/dashboard/dashboard', icon: Shield, label: 'Dashboard' },
-    { id: '/dashboard/conversation', icon: Sparkle, label: 'Conversations' },
+    { id: '/dashboard/dashboard', icon: ShieldCheck, label: 'Dashboard' },
+    { id: '/dashboard/conversation', icon: Zap, label: 'Conversations' },
     { id: '/dashboard/integration', icon: Network, label: 'Integrations' },
-    { id: '/dashboard/course', icon: Network, label: 'Courses' },
-    { id: '/dashboard/blogs', icon: Network, label: 'Blogs' },
-    { id: '/dashboard/plan', icon: Network, label: 'Plans' },
-    { id: '/dashboard/analytics', icon: Network, label: 'Analytics' },
-    { id: '/dashboard/api-key', icon: Settings, label: 'API Keys' },
-    { id: '/dashboard/settings', icon: Settings, label: 'Settings' }
+    { id: '/dashboard/course', icon: Workflow, label: 'Courses' },
+    { id: '/dashboard/blogs', icon: BookOpen, label: 'Blogs' },
+    { id: '/dashboard/plan', icon: Newspaper, label: 'Plans' },
+    { id: '/dashboard/analytics', icon: LineChart, label: 'Analytics' },
+    { id: '/dashboard/api-key', icon: Key, label: 'API Keys' },
+    { id: '/dashboard/settings', icon: Cog, label: 'Settings' }
   ];
 
   return (
     <motion.nav
-      className="fixed top-0 left-0 z-50 h-full w-64 bg-blue-950/20 border-r border-blue-800 text-white overflow-y-auto"
+      className={`top-0 left-0 z-50 fixed bg-blue-950/20 border-r border-blue-800 h-full text-white transition-all duration-300 ${isExpanded ? 'w-48' : 'w-16'}`}
       initial={{ x: -300, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
@@ -39,9 +41,11 @@ const ModernSidebar: React.FC = () => {
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
       }}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
     >
       <motion.div 
-        className="space-y-2 mt-4 p-4 pb-20"
+        className="space-y-2 mt-4 p-2 pb-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -58,7 +62,7 @@ const ModernSidebar: React.FC = () => {
               <Link href={id}>
                 <motion.div
                   className={`
-                    flex items-center p-3 rounded-xl transition-all duration-300 cursor-pointer
+                    flex items-center p-2 rounded-lg transition-all duration-300 cursor-pointer
                     ${pathname === id
                       ? 'bg-gradient-to-r from-blue-600 via-pink-600 to-purple-600 text-white'
                       : 'text-gray-200 hover:bg-gradient-to-r hover:from-blue-600/70 hover:via-pink-600/70 hover:to-purple-600/70 hover:text-white'}
@@ -77,16 +81,18 @@ const ModernSidebar: React.FC = () => {
                     animate={{ rotate: hoveredItem === id ? 360 : 0 }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   >
-                    <Icon className="w-6 min-w-[24px] h-6" />
+                    <Icon className="w-5 min-w-[20px] h-5" />
                   </motion.div>
-                  <motion.span
-                    className="ml-3 font-medium"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                  >
-                    {label}
-                  </motion.span>
+                  {isExpanded && (
+                    <motion.span
+                      className="ml-2 font-medium"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      {label}
+                    </motion.span>
+                  )}
                 </motion.div>
               </Link>
             </motion.div>
