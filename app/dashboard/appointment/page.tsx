@@ -1,16 +1,14 @@
 import { onGetAllBookingsForCurrentUser } from '@/_actions/appointment'
-import AllAppointments from '@/components/appointment/all-appointments'
-import InfoBar from '@/components/infobar'
-import Section from '@/components/section-label'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import AllAppointments from '@/_components/appointment/all-appointments'
+import InfoBar from '@/_components/infobar'
+import Section from '@/_components/section-label'
+import { Avatar, AvatarFallback } from '@/_components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { currentUser } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 import React from 'react'
 
-type Props = {}
-
-const Page = async (props: Props) => {
+const Page: React.FC = async () => {
   const user = await currentUser()
 
   if (!user) return null

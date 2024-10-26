@@ -1,9 +1,6 @@
-import {
-  onDomainCustomerResponses,
-  onGetAllDomainBookings,
-} from '@/_actions/appointment'
+import { onDomainCustomerResponses } from '@/_actions/appointment'
 import { onGetDomainProductsAndConnectedAccountId } from '@/_actions/payments'
-import PortalForm from '@/components/forms/portal/portal-form'
+import PortalForm from '@/_components/forms/portal/portal-form'
 import React from 'react'
 
 const CustomerPaymentPage = async ({
@@ -20,13 +17,13 @@ const CustomerPaymentPage = async ({
 
   return (
     <PortalForm
-      email={questions.email!}
-      products={products?.products}
-      amount={products?.amount}
+      email={questions.email ?? ''}
+      products={products?.products ?? []}
+      amount={products?.amount ?? 0}
       domainid={params.domainid}
       customerId={params.customerid}
-      questions={questions.questions}
-      stripeId={products?.stripeId!}
+      questions={questions.questions ?? []}
+      stripeId={products?.stripeId ?? ''}
       type="Payment"
     />
   )

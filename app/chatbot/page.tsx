@@ -1,9 +1,7 @@
-import AiChatBot from '@/components/chatbot'
+import AiChatBot from '@/_components/chatbot'
 import React from 'react'
 
-type Props = {}
-
-const ChatBot = (props: Props) => {
+const ChatBot: React.FC = () => {
   return <AiChatBot />
 }
 

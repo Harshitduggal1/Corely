@@ -1,4 +1,4 @@
-import { PortalBanner } from '@/components/portal/banner'
+import { PortalBanner } from '@/_components/portal/banner'
 import React from 'react'
 
 type Props = {

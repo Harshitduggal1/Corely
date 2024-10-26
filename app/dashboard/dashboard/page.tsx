@@ -6,20 +6,20 @@ import {
   getUserTotalProductPrices,
   getUserTransactions,
 } from '@/_actions/dashboard'
-import DashboardCard from '@/components/dashboard/cards'
-import { PlanUsage } from '@/components/dashboard/plan-usage'
-import InfoBar from '@/components/infobar'
+import DashboardCard from '@/_components/dashboard/cards'
+import { PlanUsage } from '@/_components/dashboard/plan-usage'
+import InfoBar from '@/_components/infobar'
 import { Separator } from '@/components/ui/separator'
 import CalIcon from '@/icons/cal-icon'
-import EmailIcon from '@/icons/email-icon'
+
 import PersonIcon from '@/icons/person-icon'
 import { TransactionsIcon } from '@/icons/transactions-icon'
 import { DollarSign } from 'lucide-react'
 import React from 'react'
 
-type Props = {}
 
-const Page = async (props: Props) => {
+const Page: React.FC = async () => {
+ 
   const clients = await getUserClients()
   const sales = await getUserBalance()
   const bookings = await getUserAppointments()
@@ -64,7 +64,8 @@ const Page = async (props: Props) => {
               </p>
             </div>
             <PlanUsage
-              plan={plan?.plan!}
+
+              plan={(plan?.plan as "STANDARD" | "PRO" | "ULTIMATE") || "STANDARD"}
               credits={plan?.credits || 0}
               domains={plan?.domains || 0}
               clients={clients || 0}
@@ -98,6 +99,6 @@ const Page = async (props: Props) => {
       </div>
     </>
   )
-}
 
+}
 export default Page

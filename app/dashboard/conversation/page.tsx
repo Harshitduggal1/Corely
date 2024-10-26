@@ -1,13 +1,13 @@
 import { onGetAllAccountDomains } from '@/_actions/settings'
-import ConversationMenu from '@/components/conversations'
-import Messenger from '@/components/conversations/messenger'
-import InfoBar from '@/components/infobar'
+import ConversationMenu from '@/_components/conversations'
+import Messenger from '@/_components/conversations/messenger'
+import InfoBar from '@/_components/infobar'
 import { Separator } from '@/components/ui/separator'
 import React from 'react'
 
-type Props = {}
+const ConversationPage: React.FC = async () => {
+ 
 
-const ConversationPage = async (props: Props) => {
   const domains = await onGetAllAccountDomains()
   return (
     <div className="w-full h-full flex">

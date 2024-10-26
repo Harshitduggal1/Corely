@@ -1,11 +1,13 @@
 'use server'
 
-import client from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
 import { extractEmailsFromString, extractURLfromString } from '@/lib/_utils'
 import { onRealTimeChat } from '../conversation'
 import { clerkClient } from '@clerk/nextjs/server'
 import { onMailer } from '../mailer'
 import OpenAi from 'openai'
+
+const prisma = new PrismaClient()
 
 const openai = new OpenAi({
   apiKey: process.env.OPEN_AI_KEY,
@@ -16,7 +18,7 @@ export const onStoreConversations = async (
   message: string,
   role: 'assistant' | 'user'
 ) => {
-  await client.chatRoom.update({
+  await prisma.chatRoom.update({
     where: {
       id,
     },
@@ -33,7 +35,7 @@ export const onStoreConversations = async (
 
 export const onGetCurrentChatBot = async (id: string) => {
   try {
-    const chatbot = await client.domain.findUnique({
+    const chatbot = await prisma.domain.findUnique({
       where: {
         id,
       },
@@ -70,7 +72,7 @@ export const onAiChatBotAssistant = async (
   message: string
 ) => {
   try {
-    const chatBotDomain = await client.domain.findUnique({
+    const chatBotDomain = await prisma.domain.findUnique({
       where: {
         id,
       },
@@ -93,7 +95,7 @@ export const onAiChatBotAssistant = async (
       }
 
       if (customerEmail) {
-        const checkCustomer = await client.domain.findUnique({
+        const checkCustomer = await prisma.domain.findUnique({
           where: {
             id,
           },
@@ -126,7 +128,7 @@ export const onAiChatBotAssistant = async (
           },
         })
         if (checkCustomer && !checkCustomer.customer.length) {
-          const newCustomer = await client.domain.update({
+          const newCustomer = await prisma.domain.update({
             where: {
               id,
             },
@@ -155,55 +157,62 @@ export const onAiChatBotAssistant = async (
             return { response }
           }
         }
-        if (checkCustomer && checkCustomer.customer[0].chatRoom[0].live) {
-          await onStoreConversations(
-            checkCustomer?.customer[0].chatRoom[0].id,
-            message,
-            author
-          )
-          
-          onRealTimeChat(
-            checkCustomer.customer[0].chatRoom[0].id,
-            message,
-            'user',
-            author
-          )
-
-          if (!checkCustomer.customer[0].chatRoom[0].mailed) {
-            const user = await clerkClient.users.getUser(
-              checkCustomer.User?.clerkId
+        if (checkCustomer?.customer[0]?.chatRoom[0]?.live) {
+          const chatRoomId = checkCustomer.customer[0].chatRoom[0].id
+          if (chatRoomId) {
+            await onStoreConversations(
+              chatRoomId,
+              message,
+              author
+            )
+            
+            onRealTimeChat(
+              chatRoomId,
+              message,
+              'user',
+              author
             )
 
-            onMailer(user.emailAddresses[0].emailAddress)
+            if (!checkCustomer.customer[0].chatRoom[0].mailed) {
+              const clerkId = checkCustomer.User?.clerkId
+              if (clerkId) {
+                const user = await clerkClient.users.getUser(clerkId)
 
-            //update mail status to prevent spamming
-            const mailed = await client.chatRoom.update({
-              where: {
-                id: checkCustomer.customer[0].chatRoom[0].id,
-              },
-              data: {
-                mailed: true,
-              },
-            })
+                onMailer(user.emailAddresses[0].emailAddress)
 
-            if (mailed) {
-              return {
-                live: true,
-                chatRoom: checkCustomer.customer[0].chatRoom[0].id,
+                //update mail status to prevent spamming
+                const mailed = await prisma.chatRoom.update({
+                  where: {
+                    id: chatRoomId,
+                  },
+                  data: {
+                    mailed: true,
+                  },
+                })
+
+                if (mailed) {
+                  return {
+                    live: true,
+                    chatRoom: chatRoomId,
+                  }
+                }
               }
             }
-          }
-          return {
-            live: true,
-            chatRoom: checkCustomer.customer[0].chatRoom[0].id,
+            return {
+              live: true,
+              chatRoom: chatRoomId,
+            }
           }
         }
 
-        await onStoreConversations(
-          checkCustomer?.customer[0].chatRoom[0].id!,
-          message,
-          author
-        )
+        const chatRoomId = checkCustomer?.customer[0]?.chatRoom[0]?.id
+        if (chatRoomId) {
+          await onStoreConversations(
+            chatRoomId,
+            message,
+            author
+          )
+        }
 
         const chatCompletion = await openai.chat.completions.create({
           messages: [
@@ -229,11 +238,11 @@ export const onAiChatBotAssistant = async (
               if the customer says something out of context or inapporpriate. Simply say this is beyond you and you will get a real user to continue the conversation. And add a keyword (realtime) at the end.
 
               if the customer agrees to book an appointment send them this link http://localhost:3000/portal/${id}/appointment/${
-                checkCustomer?.customer[0].id
+                checkCustomer?.customer[0]?.id
               }
 
               if the customer wants to buy a product redirect them to the payment page http://localhost:3000/portal/${id}/payment/${
-                checkCustomer?.customer[0].id
+                checkCustomer?.customer[0]?.id
               }
           `,
             },
@@ -247,56 +256,62 @@ export const onAiChatBotAssistant = async (
         })
 
         if (chatCompletion.choices[0].message.content?.includes('(realtime)')) {
-          const realtime = await client.chatRoom.update({
-            where: {
-              id: checkCustomer?.customer[0].chatRoom[0].id,
-            },
-            data: {
-              live: true,
-            },
-          })
+          const chatRoomId = checkCustomer?.customer[0]?.chatRoom[0]?.id
+          if (chatRoomId) {
+            const realtime = await prisma.chatRoom.update({
+              where: {
+                id: chatRoomId,
+              },
+              data: {
+                live: true,
+              },
+            })
 
-          if (realtime) {
-            const response = {
-              role: 'assistant',
-              content: chatCompletion.choices[0].message.content.replace(
-                '(realtime)',
-                ''
-              ),
+            if (realtime) {
+              const response = {
+                role: 'assistant',
+                content: chatCompletion.choices[0].message.content.replace(
+                  '(realtime)',
+                  ''
+                ),
+              }
+
+              await onStoreConversations(
+                chatRoomId,
+                response.content,
+                'assistant'
+              )
+
+              return { response }
             }
-
-            await onStoreConversations(
-              checkCustomer?.customer[0].chatRoom[0].id!,
-              response.content,
-              'assistant'
-            )
-
-            return { response }
           }
         }
         if (chat[chat.length - 1].content.includes('(complete)')) {
-          const firstUnansweredQuestion =
-            await client.customerResponses.findFirst({
-              where: {
-                customerId: checkCustomer?.customer[0].id,
-                answered: null,
-              },
-              select: {
-                id: true,
-              },
-              orderBy: {
-                question: 'asc',
-              },
-            })
-          if (firstUnansweredQuestion) {
-            await client.customerResponses.update({
-              where: {
-                id: firstUnansweredQuestion.id,
-              },
-              data: {
-                answered: message,
-              },
-            })
+          const customerId = checkCustomer?.customer[0]?.id
+          if (customerId) {
+            const firstUnansweredQuestion =
+              await prisma.customerResponses.findFirst({
+                where: {
+                  customerId: customerId,
+                  answered: null,
+                },
+                select: {
+                  id: true,
+                },
+                orderBy: {
+                  question: 'asc',
+                },
+              })
+            if (firstUnansweredQuestion) {
+              await prisma.customerResponses.update({
+                where: {
+                  id: firstUnansweredQuestion.id,
+                },
+                data: {
+                  answered: message,
+                },
+              })
+            }
           }
         }
 
@@ -304,7 +319,6 @@ export const onAiChatBotAssistant = async (
           const generatedLink = extractURLfromString(
             chatCompletion.choices[0].message.content as string
           )
-
           if (generatedLink) {
             const link = generatedLink[0]
             const response = {
@@ -313,11 +327,14 @@ export const onAiChatBotAssistant = async (
               link: link.slice(0, -1),
             }
 
-            await onStoreConversations(
-              checkCustomer?.customer[0].chatRoom[0].id!,
-              `${response.content} ${response.link}`,
-              'assistant'
-            )
+            const chatRoomId = checkCustomer?.customer[0]?.chatRoom[0]?.id
+            if (chatRoomId) {
+              await onStoreConversations(
+                chatRoomId,
+                `${response.content} ${response.link}`,
+                'assistant'
+              )
+            }
 
             return { response }
           }
@@ -327,11 +344,14 @@ export const onAiChatBotAssistant = async (
             content: chatCompletion.choices[0].message.content,
           }
 
-          await onStoreConversations(
-            checkCustomer?.customer[0].chatRoom[0].id!,
-            `${response.content}`,
-            'assistant'
-          )
+          const chatRoomId = checkCustomer?.customer[0]?.chatRoom[0]?.id
+          if (chatRoomId) {
+            await onStoreConversations(
+              chatRoomId,
+              `${response.content}`,
+              'assistant'
+            )
+          }
 
           return { response }
         }

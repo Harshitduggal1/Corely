@@ -1,12 +1,10 @@
-import InfoBar from '@/components/infobar'
-import BillingSettings from '@/components/settings/billing-settings'
-import ChangePassword from '@/components/settings/change-password'
-import DarkModetoggle from '@/components/settings/dark-mode'
+import InfoBar from '@/_components/infobar'
+import BillingSettings from '@/_components/settings/billing-settings'
+import ChangePassword from '@/_components/settings/change-password'
+import DarkModetoggle from '@/_components/settings/dark-mode'
 import React from 'react'
 
-type Props = {}
-
-const Page = (props: Props) => {
+const Page: React.FC = () => {
   return (
     <>
       <InfoBar />

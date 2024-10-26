@@ -1,6 +1,6 @@
 import { onGetPaymentConnected } from '@/_actions/settings'
-import InfoBar from '@/components/infobar'
-import IntegrationsList from '@/components/integrations'
+import InfoBar from '@/_components/infobar'
+import IntegrationsList from '@/_components/integrations'
 
 const IntegrationsPage = async () => {
   const payment = await onGetPaymentConnected()

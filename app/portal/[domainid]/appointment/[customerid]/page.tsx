@@ -2,7 +2,7 @@ import {
   onDomainCustomerResponses,
   onGetAllDomainBookings,
 } from '@/_actions/appointment'
-import PortalForm from '@/components/forms/portal/portal-form'
+import PortalForm from '@/_components/forms/portal/portal-form'
 import React from 'react'
 
 type Props = { params: { domainid: string; customerid: string } }
