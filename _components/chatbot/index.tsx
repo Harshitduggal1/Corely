@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-types */
 'use client'
 import { useChatBot } from '@/hooks/chatbot/use-chatbot'
 import React from 'react'
 import { BotWindow } from './window'
-import { cn } from '@/lib/_utils'
+import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { BotIcon } from '@/icons/bot-icon'
 
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const AiChatBot = () => {
   const {
     onOpenChatBot,
@@ -26,14 +23,14 @@ const AiChatBot = () => {
   } = useChatBot()
 
   return (
-    <div className="h-screen flex flex-col justify-end items-end gap-4">
+    <div className="flex flex-col justify-end items-end gap-4 h-screen">
       {botOpened && (
         <BotWindow
           errors={errors}
           setChat={setOnChats}
           realtimeMode={onRealTime}
           helpdesk={currentBot?.helpdesk ?? []}
-          domainName={currentBot?.name || ''}
+          domainName={currentBot?.name ?? ''}
           ref={messageWindowRef}
           help={currentBot?.chatBot?.helpdesk}
           theme={currentBot?.chatBot?.background}
@@ -64,4 +61,4 @@ const AiChatBot = () => {
     </div>
   )
 }
-
+export default AiChatBot
