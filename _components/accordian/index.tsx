@@ -1,3 +1,5 @@
+"use client"
+  
 import React from 'react'
 import { AccordionContent, AccordionItem, AccordionTrigger, Accordion as ShadcnAccordion } from '@/_components/ui/accordion'
 
