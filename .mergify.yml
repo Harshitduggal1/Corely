@@ -1,0 +1,15 @@
+pull_request_rules:
+  - name: Label Mergify Stacks PRs
+    description: Pull requests that are part of a Mergify stack should be labeled as such
+    conditions:
+      - "body ~= ^Change-Id:"
+    actions:
+      label:
+        toggle:
+          - stack
+  - name: Automatic merge
+    description: Merge when PR passes all branch protection and has label automerge
+    conditions:
+      - label = automerge
+    actions:
+      merge:
