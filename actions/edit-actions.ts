@@ -1,5 +1,5 @@
 "use server";
-
+//for server only
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";

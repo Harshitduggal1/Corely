@@ -1,4 +1,5 @@
 "use server";
+//server only
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
